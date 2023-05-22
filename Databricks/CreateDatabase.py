@@ -149,9 +149,10 @@ except: print('table already exists')
 # MAGIC   Date
 # MAGIC   , Course
 # MAGIC   , GameType
-# MAGIC   , OverPar
-# MAGIC   , Score
-# MAGIC   , Putts
+# MAGIC   , cast(substring(GameType FROM 1 FOR 2) as int) as NumHoles
+# MAGIC   , cast(OverPar as int) as OverPar
+# MAGIC   , cast(Score as int) as Score
+# MAGIC   , cast(Putts as int) as Putts
 # MAGIC   , cast(replace(GIRPerc, '%', '') as int) as GIRPerc
 # MAGIC   , cast(replace(FairwayHitPerc, '%', '') as int) as FairwayHitPerc 
 # MAGIC   , substring(Date FROM 1 FOR 2) as Day
@@ -183,8 +184,25 @@ except: print('table already exists')
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * 
-# MAGIC   from golfanalysis.hole19features h19
+# MAGIC drop table if exists golfanalysis.training
+# MAGIC ;
+# MAGIC
+# MAGIC create table golfanalysis.training
+# MAGIC as
+# MAGIC select 
+# MAGIC   h19.Day
+# MAGIC   , h19.Month
+# MAGIC   , h19.Year
+# MAGIC   , h19.Course
+# MAGIC   , h19.NumHoles
+# MAGIC   , h19.OverPar
+# MAGIC   , h19.Score
+# MAGIC   , h19.Putts
+# MAGIC   , h19.GIRPerc
+# MAGIC   , h19.FairwayHitPerc
+# MAGIC   , wf.tavg as TemperatureAverage
+# MAGIC   , wf.wspd as WindSpeed
+# MAGIC from golfanalysis.hole19features h19
 # MAGIC   left join golfanalysis.weatherfeatures wf 
 # MAGIC     on h19.Day = wf.Day 
 # MAGIC     and h19.Month = wf.Month 
