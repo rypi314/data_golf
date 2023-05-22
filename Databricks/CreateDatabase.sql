@@ -1,20 +1,28 @@
 -- Databricks notebook source
 -- MAGIC %md 
--- MAGIC ## Set up database environment
+-- MAGIC # Set up database environment
 -- MAGIC
--- MAGIC Before you begin, upload the hole19down file to the default databricks databasea as **hole_19_download**.
+-- MAGIC In this file, we will create a new database named **golfanalysis** and add table **hole19download** and **weather** to it.
 
 -- COMMAND ----------
 
-create database GolfAnalysis;
+-- MAGIC %md
+-- MAGIC ## Create Database
 
 -- COMMAND ----------
 
-show databases;
+-- MAGIC %python
+-- MAGIC import pandas as pd
 
 -- COMMAND ----------
 
-show tables from default;
+CREATE DATABASE IF NOT EXISTS GolfAnalysis;
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Add Table from Hole19 Download
 
 -- COMMAND ----------
 
@@ -29,14 +37,21 @@ show tables from default;
 
 -- COMMAND ----------
 
-select * from hole_19_download limit 5;
-
--- COMMAND ----------
-
 -- MAGIC %python
 -- MAGIC
--- MAGIC df = spark.read.table('default.hole_19_download')
+-- MAGIC try:
+-- MAGIC   spark.createDataFrame(df).write.saveAsTable('golfanalysis.hole19download')
+-- MAGIC except: print('table already exists')
 
 -- COMMAND ----------
 
--- MAGIC %python 
+show tables from golfanalysis;
+
+-- COMMAND ----------
+
+select * from golfanalysis.hole19download limit 5;
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Add Weather Table
