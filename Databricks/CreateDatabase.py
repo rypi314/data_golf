@@ -159,6 +159,7 @@ except: print('table already exists')
 # MAGIC   , substring(Date FROM 4 FOR 3) as Month
 # MAGIC   , substring(Date, -4) as Year
 # MAGIC from golfanalysis.hole19download
+# MAGIC where OverPar > 0 --Remove bad data that saved automatically 
 # MAGIC ;
 
 # COMMAND ----------
