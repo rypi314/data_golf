@@ -87,6 +87,11 @@ plt.show()
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC Temperatures are in celsius.
+
+# COMMAND ----------
+
 data.reset_index(level=0, inplace=True)
 
 data.head()

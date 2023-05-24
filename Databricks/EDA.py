@@ -29,11 +29,12 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from golfanalysis.training
+# MAGIC select * from golfanalysis.training limit 5;
 
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC --From the visualization, we can see the Brickyard Crossing GC is the most challenging. 
 # MAGIC select * from golfanalysis.training
 
 # COMMAND ----------
