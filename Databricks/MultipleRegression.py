@@ -90,6 +90,57 @@ mlflow.end_run()
 # COMMAND ----------
 
 import mlflow
+from sklearn.linear_model import LogisticRegression
+import numpy as np
+from urllib.parse import urlparse
+
+# End any existing runs (in the case this notebook is being run for a second time)
+mlflow.end_run()
+
+with mlflow.start_run(run_name = 'golf_mulreg'):
+        
+        data = df.toPandas()
+        data_dum = pd.get_dummies(data, drop_first=True)
+
+        # Extract features & labels
+        X = data_dum.drop(["OverPar"], axis=1)
+        y = data_dum.OverPar
+
+        from sklearn.model_selection import train_test_split
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+        # define the multinomial logistic regression model
+        model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+        
+        # fit model
+        model.fit(X,y)
+        
+        # find accuracy
+        acc = model.score(X, y)
+ 
+        print('accuracy:', acc)
+        
+        mlflow.log_metric("acc", acc)
+        mlflow.log_param("model type", 'multinomial logistic regression')
+        
+        tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+
+        # Model registry does not work with file store
+        if tracking_url_type_store != "file":
+
+            # Register the model
+            # There are other ways to use the Model Registry, which depends on the use case,
+            # please refer to the doc for more information:
+            # https://mlflow.org/docs/latest/model-registry.html#api-workflow
+            mlflow.sklearn.log_model(model, "GolfMulRegModel", registered_model_name="GolfMulRegModel")
+        else:
+            mlflow.sklearn.log_model(model, "GolfMulRegModel")
+
+mlflow.end_run()
+
+# COMMAND ----------
+
+import mlflow
 logged_model = 'runs:/87cfdf4c855b4111908aee02e3465e2c/GolfModel'
 
 # Load model as a PyFuncModel.
