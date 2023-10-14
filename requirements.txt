@@ -1,0 +1,4 @@
+meteostat
+ipykernel
+pandas
+matplotlib
