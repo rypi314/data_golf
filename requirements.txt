@@ -1,0 +1,5 @@
+meteostat
+ipykernel
+pandas
+matplotlib
+scikit-learn
