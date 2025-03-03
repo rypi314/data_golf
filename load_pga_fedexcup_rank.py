@@ -10,34 +10,23 @@ url = 'https://www.pgatour.com/fedexcup'
 response = requests.get(url)
 soup = BeautifulSoup(response.content, 'html.parser')
 
-# Find the table containing the leaderboard data
-table = soup.find('table', {'class': 'table-styled'})
+# Find the script tag containing JSON data
+script_tag = soup.find('script', {'type': 'application/json'})
+json_data = json.loads(script_tag.string)
 
-# Ensure the table is found
-if table is None:
-    raise ValueError("Leaderboard table not found")
-
-# Find all the rows in the table
-rows = table.find_all('tr')[1:]  # Skip the header row
+# Extract tee times data
+fedex_rank_data = json_data['props']['pageProps']['tourCupDetails']['projectedPlayers']
 
 # Extract relevant data
 data = []
-for row in rows:
-    cols = row.find_all('td')
-    rank = cols[0].text.strip()
-    player_name = cols[1].text.strip()
-    points = cols[2].text.strip()
-    events = cols[3].text.strip()
-    wins = cols[4].text.strip()
-    top10s = cols[5].text.strip()
-
+for player in json_data:
     player_info = {
-        'Rank': rank,
-        'Player Name': player_name,
-        'Points': points,
-        'Events': events,
-        'Wins': wins,
-        'Top 10s': top10s,
+        'Player Name': player['displayName'],
+        'Country': player['country'],
+        'Projected Rank': player['rankingData']['projected'],
+        'Official Rank': player['rankingData']['official'],
+        'Point Data Projected': player['pointData']['projected'],
+        'Point Data Official': player['pointData']['official']
     }
     data.append(player_info)
 
