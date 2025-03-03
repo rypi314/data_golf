@@ -14,19 +14,19 @@ soup = BeautifulSoup(response.content, 'html.parser')
 script_tag = soup.find('script', {'type': 'application/json'})
 json_data = json.loads(script_tag.string)
 
-# Extract tee times data
+# Extract fedex rank data
 fedex_rank_data = json_data['props']['pageProps']['tourCupDetails']['projectedPlayers']
 
 # Extract relevant data
 data = []
 for player in fedex_rank_data:
     player_info = {
-        'Player Name': player['displayName'],
-        'Country': player['country'],
-        'Projected Rank': player['rankingData']['projected'],
-        'Official Rank': player['rankingData']['official'],
-        'Point Data Projected': player['pointData']['projected'],
-        'Point Data Official': player['pointData']['official']
+        'Player Name': player.get('displayName', 'N/A'),
+        'Country': player.get('country', 'N/A'),
+        'Projected Rank': player.get('rankingData', {}).get('projected', 'N/A'),
+        'Official Rank': player.get('rankingData', {}).get('official', 'N/A'),
+        'Point Data Projected': player.get('pointData', {}).get('projected', 'N/A'),
+        'Point Data Official': player.get('pointData', {}).get('official', 'N/A')
     }
     data.append(player_info)
 
