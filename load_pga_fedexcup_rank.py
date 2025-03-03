@@ -19,7 +19,7 @@ fedex_rank_data = json_data['props']['pageProps']['tourCupDetails']['projectedPl
 
 # Extract relevant data
 data = []
-for player in json_data:
+for player in fedex_rank_data:
     player_info = {
         'Player Name': player['displayName'],
         'Country': player['country'],
