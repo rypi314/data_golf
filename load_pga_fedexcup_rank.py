@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import json
 
 # URL of the webpage to scrape
 url = 'https://www.pgatour.com/fedexcup'
