@@ -34,4 +34,4 @@ for player in fedex_rank_data:
 df = pd.DataFrame(data)
 
 # Display the DataFrame
-print(df.head(10))
+print(df.head(2))
