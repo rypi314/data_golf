@@ -29,7 +29,7 @@ df_world_rank = load_world_rank.df
 
 df_times_rank = pd.merge(df_tee_time, df_world_rank, left_on='Player Name', right_on='Full Name', how='left')
 
-df_times_rank = df_times_rank[['Group Number','Tee Time', 'Player Name'
+df_times_rank = df_times_rank[['GrpNum','TeeTime', 'PlayerName'
                                #,'Official Rank'
                                ,'Rank']]
 
@@ -47,8 +47,18 @@ df_bet = df_times_rank[df_times_rank['Group Number'].isin(df_best_groups['Group 
 
 # Compute the mean for each group and assign it as a new column
 df_bet['Sum'] = df_bet.groupby('Group Number')['Difference'].transform('sum')
-df_bet['Average'] = df_bet.groupby('Group Number')['Difference'].transform('mean')
+df_bet['Average'] = df_bet.groupby('Group Number')['Difference'].transform('mean').round(decimals=1)
 
 df_print = df_bet.sort_values(by='Sum', ascending=True).head(n=10)
 
-df_print.head(n=10)
+# Compute column widths
+col_widths = {col: max(df_print[col].astype(str).map(len).max(), len(col)) for col in df_print.columns}
+# Generate Markdown table
+header = "| " + " | ".join([f"{col:<{col_widths[col]}}" for col in df_print.columns]) + " |"
+separator = "|-" + "-|-".join(["-" * col_widths[col] for col in df_print.columns]) + "-|"
+rows = "\n".join(["| " + " | ".join([f"{str(row[col]):<{col_widths[col]}}" for col in df_print.columns]) + " |" for _, row in df_print.iterrows()])
+
+markdown_table = f"{header}\n{separator}\n{rows}"
+
+print(markdown_table)
+#df_print.head(n=10)

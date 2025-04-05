@@ -7,11 +7,14 @@ df = pd.DataFrame({
     "City": ["New York", "Los Angeles", "Chicago"]
 })
 
-# Convert DataFrame to Markdown format
-markdown_table = df.to_markdown(index=False)
+# Compute column widths
+col_widths = {col: max(df[col].astype(str).map(len).max(), len(col)) for col in df.columns}
 
-# Write to a Markdown file
-with open("data.md", "w") as f:
-    f.write(markdown_table)
+# Generate Markdown table
+header = "| " + " | ".join([f"{col:<{col_widths[col]}}" for col in df.columns]) + " |"
+separator = "|-" + "-|-".join(["-" * col_widths[col] for col in df.columns]) + "-|"
+rows = "\n".join(["| " + " | ".join([f"{str(row[col]):<{col_widths[col]}}" for col in df.columns]) + " |" for _, row in df.iterrows()])
 
-print("Markdown file created: data.md")
+markdown_table = f"{header}\n{separator}\n{rows}"
+
+print(markdown_table)
