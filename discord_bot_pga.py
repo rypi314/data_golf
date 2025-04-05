@@ -25,7 +25,7 @@ async def on_ready():
 async def pga(ctx):
     await ctx.send(f'''Hey {ctx.author.mention}
 Finding best tee time matchup for {pga_matchup.result_date} according to the world rankings.
-```{pga_matchup.markdown_table}```
+{pga_matchup.markdown_table}
                    ''')
 
 # Run the bot
