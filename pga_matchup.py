@@ -51,14 +51,6 @@ df_bet['Average'] = df_bet.groupby('Group Number')['Difference'].transform('mean
 
 df_print = df_bet.sort_values(by='Sum', ascending=True).head(n=10)
 
-# Compute column widths
-col_widths = {col: max(df_print[col].astype(str).map(len).max(), len(col)) for col in df_print.columns}
-# Generate Markdown table
-header = "| " + " | ".join([f"{col:<{col_widths[col]}}" for col in df_print.columns]) + " |"
-separator = "|-" + "-|-".join(["-" * col_widths[col] for col in df_print.columns]) + "-|"
-rows = "\n".join(["| " + " | ".join([f"{str(row[col]):<{col_widths[col]}}" for col in df_print.columns]) + " |" for _, row in df_print.iterrows()])
 
-markdown_table = f"{header}\n{separator}\n{rows}"
-
-print(markdown_table)
+print(df_print)
 #df_print.head(n=10)
