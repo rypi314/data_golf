@@ -29,7 +29,7 @@ df_world_rank = load_world_rank.df
 
 df_times_rank = pd.merge(df_tee_time, df_world_rank, left_on='Player Name', right_on='Full Name', how='left')
 
-df_times_rank = df_times_rank[['GrpNum','TeeTime', 'PlayerName'
+df_times_rank = df_times_rank[['Group Number','Tee Time', 'Player Name'
                                #,'Official Rank'
                                ,'Rank']]
 
