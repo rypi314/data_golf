@@ -63,8 +63,8 @@ while True:
 df = pd.DataFrame(all_data)
 
 # Display the first few rows of the DataFrame
-#print(df.head())
+print(df.head())
 
 # Save the DataFrame to a CSV file
-#df.to_csv('rankings_list.csv', index=False)
-#print("Player rankings from all pages have been saved to 'rankings_list.csv'.")
+df.to_csv('rankings_list.csv', index=False)
+print("Player rankings from all pages have been saved to 'rankings_list.csv'.")
