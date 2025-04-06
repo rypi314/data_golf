@@ -6,11 +6,8 @@ from datetime import datetime, timedelta
 # Load the pga tee times 
 df_tee_time = load_pga_tee_time.df
 
-date_input = datetime.now().date()
-
 # Convert user input to a pandas Timestamp
-date_input = pd.to_datetime(date_input)
-
+date_input = pd.to_datetime(datetime.now())
 # Filter the DataFrame to include only rows with the specified date
 df_tee_time = df_tee_time[df_tee_time['Tee Time'].dt.date == date_input.date()]
 
@@ -38,7 +35,7 @@ df_bet = df_times_rank[df_times_rank['Group Number'].isin(df_best_groups['Group 
 df_bet['Sum'] = df_bet.groupby('Group Number')['Difference'].transform('sum')
 df_bet['Average'] = df_bet.groupby('Group Number')['Difference'].transform('mean').round(decimals=1)
 
-df_print = df_bet.sort_values(by='Sum', ascending=True).head(n=10)
+df_print = df_bet.sort_values(by='Sum', ascending=True).head(n=12)
 
 print(df_print)
 
@@ -50,13 +47,13 @@ lowest_ranked_players = df_print.loc[df_print.groupby("Tee Time")["Rank"].idxmin
 grouped_data = df_print.groupby("Tee Time")["Difference"].agg(["sum", "mean"]).reset_index()
 lowest_ranked_players = lowest_ranked_players.merge(grouped_data, on="Tee Time")
 
-course_str = df_print['Course Name'].head(n=1)
+course_str = df_print['Course Name'].head(n=1).values[0]
 
 # Generate paragraph summary
-summary = f"For each tee time grouping at {course_str}, the player with the lowest rank has been identified along with key performance metrics.\n\n "
+summary = f"For each tee time grouping at {course_str}, the player with the lowest rank has been identified along with key performance metrics.\n"
 for _, row in lowest_ranked_players.iterrows():
-    summary += (f"* In the group that teed off at {row['Tee Time']}, **{row['Player Name']}** holds the lowest rank at {row['Rank']}, "
-                f"with a difference of {row['Difference']}. This group collectively had a sum of differences of {row['sum']}, "
-                f"leading to an average difference of {row['mean']:.1f} across its members. \n ")
+    summary += (f"* In the group that teed off at {row['Tee Time']}, **{row['Player Name']}** holds the lowest rank."
+                f"This group collectively has a combined rank of {row['sum']*-1}, "
+                f"leading to an average difference in rank of {row['mean']*-1:.1f} across its members. \n ")
 
 print(summary)
