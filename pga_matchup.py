@@ -12,10 +12,11 @@ from datetime import datetime, timedelta
 # Get current time
 now = datetime.now()
 # Check if it's AM or PM
-if now.hour < 12:
-    result_date = now.date()  # Today's date
-else:
-    result_date = (now + timedelta(days=1)).date()  # Tomorrow's date
+#if now.hour < 12:
+result_date = now.date()  # Today's date
+#else:
+#    result_date = (now + timedelta(days=1)).date()  # Tomorrow's date
+
 
 date_input = result_date
 
@@ -29,7 +30,7 @@ df_world_rank = load_world_rank.df
 
 df_times_rank = pd.merge(df_tee_time, df_world_rank, left_on='Player Name', right_on='Full Name', how='left')
 
-df_times_rank = df_times_rank[['Group Number','Tee Time', 'Player Name'
+df_times_rank = df_times_rank[['Group Number','Tee Time', 'Course Name', 'Player Name'
                                #,'Official Rank'
                                ,'Rank']]
 
@@ -51,6 +52,25 @@ df_bet['Average'] = df_bet.groupby('Group Number')['Difference'].transform('mean
 
 df_print = df_bet.sort_values(by='Sum', ascending=True).head(n=10)
 
-
 print(df_print)
-#df_print.head(n=10)
+
+
+
+
+# Find player with the lowest rank for each tee time group
+lowest_ranked_players = df_print.loc[df_print.groupby("Tee Time")["Rank"].idxmin()]
+
+# Calculate sum and average of differences for each group
+grouped_data = df_print.groupby("Tee Time")["Difference"].agg(["sum", "mean"]).reset_index()
+lowest_ranked_players = lowest_ranked_players.merge(grouped_data, on="Tee Time")
+
+course_str = df_print['Course Name'].head(n=1)
+
+# Generate paragraph summary
+summary = f"For each tee time grouping at {course_str}, the player with the lowest rank has been identified along with key performance metrics.\n\n "
+for _, row in lowest_ranked_players.iterrows():
+    summary += (f"* In the group that teed off at {row['Tee Time']}, **{row['Player Name']}** holds the lowest rank at {row['Rank']}, "
+                f"with a difference of {row['Difference']}. This group collectively had a sum of differences of {row['sum']}, "
+                f"leading to an average difference of {row['mean']:.1f} across its members. \n ")
+
+print(summary)
