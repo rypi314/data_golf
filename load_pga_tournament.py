@@ -40,4 +40,4 @@ df['total_stroke'] = df[['R1', 'R2', 'R3', 'R4']].sum(axis=1).astype(int)
 df.fillna('-', inplace=True)
 
 # Display the DataFrame
-print(df.head(10))
+print(df.head(2))
