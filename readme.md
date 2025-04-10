@@ -1,3 +1,7 @@
 # Orchestration
 
-Run discord_bot_pga.py
+Run 
+
+```cmd
+python discord_bot_pga.py
+```
