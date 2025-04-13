@@ -7,9 +7,17 @@ from datetime import datetime, timedelta
 df_tee_time = load_pga_tee_time.df
 
 # Convert user input to a pandas Timestamp
-date_input = pd.to_datetime(datetime.now())
-# Filter the DataFrame to include only rows with the specified date
-df_tee_time = df_tee_time[df_tee_time['Tee Time'].dt.date == date_input.date()]
+from datetime import datetime
+
+# Convert date_input from string to datetime.date
+date_input = datetime.strptime('2025-04-13', "%Y-%m-%d").date()
+
+# Ensure the 'Tee Time' column is in datetime format
+df_tee_time['Tee Time'] = pd.to_datetime(df_tee_time['Tee Time'])
+
+# Filter the DataFrame based on date
+df_tee_time = df_tee_time[df_tee_time['Tee Time'].dt.date == date_input]
+
 
 df_world_rank = pd.read_csv('rankings_list.csv')
 
@@ -38,7 +46,7 @@ df_bet['Average'] = df_bet.groupby('Group Number')['Difference'].transform('mean
 df_print = df_bet.sort_values(by='Sum', ascending=True).head(n=12)
 
 print(df_print)
-
+df_print.head()
 
 # Find player with the lowest rank for each tee time group
 lowest_ranked_players = df_print.loc[df_print.groupby("Tee Time")["Rank"].idxmin()]
@@ -47,7 +55,7 @@ lowest_ranked_players = df_print.loc[df_print.groupby("Tee Time")["Rank"].idxmin
 grouped_data = df_print.groupby("Tee Time")["Difference"].agg(["sum", "mean"]).reset_index()
 lowest_ranked_players = lowest_ranked_players.merge(grouped_data, on="Tee Time")
 
-course_str = df_print['Course Name'].head(n=1).values[0]
+course_str = df_print['Course Name'].head(n=1).values
 
 # Generate paragraph summary
 summary = f"For each tee time grouping at {course_str}, the player with the lowest rank has been identified along with key performance metrics.\n"
