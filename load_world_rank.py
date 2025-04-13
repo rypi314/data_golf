@@ -51,6 +51,7 @@ while True:
                 "Week End Date": entry.get("weekEndDate", "N/A")
             }
             all_data.append(player_info)
+            print(page_number)
         
         # Increment the page number for the next iteration
         page_number += 1
